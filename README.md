@@ -1,61 +1,55 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# System komunikacji z zasobem REST API PET
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Wymagania techniczne
 
-## About Laravel
+1. Composer
+2. Apache 2
+3. PHP 8.2
+4. Laravel 12
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Opis instalacji projektu
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Trzeba zainstalować serwer *Apache 2* wraz z serwerem *PHP 8.2*. Najlepiej zainstalować paczkę gotową np. *Xampp*.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Za pomocą composera w folderze głównym aplikacji, którą trzeba umiejscowić w głównym foderze serwera Apache, w linii komend trzeba pobrać wersję Laravela 12:
 
-## Learning Laravel
+`composer install`
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Trzeba skopiować plik z parametrami *.env.example* do pliku *.env* . W pliku *.env* trzeba ustawić parametry:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- *API_KEY* - klucz API do autoryacji requestów do zasobu REST API
+- *PET_REST_API_URL* - adres URL do zasobu REST API PET
+- *APP_NAME* - nazwa aplikacji
+- *APP_URL* - adres URL lokalny do aplikacji
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Instrukcja używania aplikacji
 
-## Laravel Sponsors
+W aplikacji możemy dodawać, aktualizować, usuwać i pobierać elementy PET z zasobu REST API. Po wciśnięciu w menu *"Lista elementów PET"* wyświetlą się linki do list zasobów REST API PET czyli ze statusem:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- available
+- pending
+- sold
 
-### Premium Partners
+Po wejściu w któryś z linków powyższych wyświetli się lista elementów PET w tabeli zasobu REST API zgodna z wybranym statusem. Tabela listy zawiera na dole paginację z wyświetleniem 10 elementów na stronie. Ilość elementów na stronie można ustawić w pliku *config/pagination.php* w zmiennej *per_page*. Każda lista elementów zasobu REST API PET ma kolumny:
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- Id
+- Id kategorii
+- Nazwa kategorii
+- Nazwa
+- Akcje
 
-## Contributing
+W kolumnie "Akcje" są linki:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- Edytuj
+- Usuń
 
-## Code of Conduct
+Po wciśnięciu linku *"Edytuj"* wyświetli się formularz edycji elementu danego zasobu REST API. Jeśli danego elementu nie będzie wyświetli się odpowiedni komunikat. W formularzu edycji oprócz pól które były na liście jest jeszcze możliwość aktualizowania tagów elementu zasobu oraz ustawienia statusu. Po wciśnięciu linku *"Usuń"* wyświetli się pytanie czy na pewno usunąć dany element. Po zatwierdzeniu usuwania operacja ta zostanie wykonana.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Po wciśnięciu w menu *"Dodaj element do zasobu PET"* wyświetli się formularz dodawania elementów PET do zasobu REST API. Pola te są identyczne jak w przypadku formularza edycji tych elementów.
 
-## Security Vulnerabilities
+Formularze dodawania i edycji elementów do zasobu REST API posiadają walidację z obsługą błędów. Polami obowiązkowymi są pola:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- Nazwa
+- Status
 
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Gdy podamy w formularzach niewłaściwe dane wyświetli się odpowiedni komunikat.
