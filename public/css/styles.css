@@ -1,0 +1,117 @@
+#title
+{
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 50px;
+    text-transform: uppercase;
+    margin-bottom: 50px;
+}
+
+#menu-container
+{
+    float: left;
+}
+
+#content
+{
+    float: left;
+    margin-left: 20px;
+}
+
+#menu
+{
+    list-style: none;
+    margin: 0;
+    margin-left: 20px;
+    padding: 0;
+}
+
+#menu li
+{
+    background-color: #f1f1f1;
+}
+
+#menu li a.active
+{
+    background-color: #04AA6D;
+    color: white;
+}
+
+#menu li a
+{
+    display: block;
+    padding: 10px;
+}
+
+#menu li a:hover
+{
+    background-color: #555;
+    color: white;
+}
+
+#menu li:hover
+{
+    background-color: #04AA6D;
+}
+
+a
+{
+    text-decoration: none;
+    color: #000;
+}
+
+body
+{
+    margin: 0;
+    padding: 0;
+}
+
+#chart_div,
+#chart_div2
+{
+    width: 800px;
+    height: 500px;
+}
+
+#chart_div2
+{
+    margin-top: 50px;
+}
+
+.tab-content>.tab-pane {
+  height: 1px;
+  overflow: hidden;
+  display: block;
+ visibility: hidden;
+}
+.tab-content>.active {
+  height: auto;
+  overflow: auto;
+  visibility: visible;
+}
+
+#myTab, #myTabContent
+{
+    display: none;
+}
+
+#select_day
+{
+    margin-bottom: 20px;
+}
+
+#loader
+{
+    display: none;
+}
+
+#details
+{
+    margin-top: 40px;
+}
+
+h1
+{
+	font-size: 24px;	
+}
