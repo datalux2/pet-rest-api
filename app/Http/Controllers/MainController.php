@@ -6,12 +6,13 @@
     
     /**
      * 
-     * 
+     * Class of main controller
      *
      */
     class MainController extends Controller
     {
         /**
+         * Show main page
          * 
          * @return View
          */

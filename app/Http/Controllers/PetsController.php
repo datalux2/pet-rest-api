@@ -10,12 +10,14 @@ use Illuminate\Support\Collection;
 
 /**
  * 
- * 
+ * Class of controller concerning
+ * pets
  *
  */
 class PetsController extends Controller
 {
     /**
+     * Show links to pets lists by available, pending and sold status
      * 
      * @return View
      */
@@ -27,10 +29,11 @@ class PetsController extends Controller
     }
     
     /**
+     * Show pet add form
      * 
-     * @return unknown
+     * @return View
      */
-    public function add()
+    public function add(): View
     {
         return view('pets/add', [
             'app_name' => $this->app_name
@@ -38,6 +41,7 @@ class PetsController extends Controller
     }
     
     /**
+     * Adding pet to REST API PET list
      * 
      * @param Request $request
      * @return View
@@ -89,12 +93,13 @@ class PetsController extends Controller
         }
     }
     
-   /**
-    * 
-    * @param unknown $id
-    * @return View
-    */
-    public function edit($id): View
+    /**
+     * Show pet edit form
+     * 
+     * @param int $id
+     * @return View
+     */
+    public function edit(int $id): View
     {
         $response = Http::withHeaders([
             'Accept' => 'application/json',
@@ -113,6 +118,7 @@ class PetsController extends Controller
     }
     
     /**
+     * Updating pet in REST API PET list
      * 
      * @param Request $request
      * @return View
@@ -173,6 +179,7 @@ class PetsController extends Controller
     }
     
     /**
+     * Deleting pet in REST API PET list
      * 
      * @param Request $request
      */
@@ -219,6 +226,7 @@ class PetsController extends Controller
     }
     
     /**
+     * Show list of pets in REST API PET by status
      * 
      * @param Request $request
      * @param string $status
