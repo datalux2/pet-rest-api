@@ -38,7 +38,7 @@ Po wejściu w któryś z linków powyższych wyświetli się lista elementów PE
 - Nazwa
 - Akcje
 
-W kolumnie "Akcje" są linki:
+W kolumnie *"Akcje"* są linki:
 
 - Edytuj
 - Usuń
