@@ -58,6 +58,23 @@ class PetsController extends Controller
                 'status' => 'required|string|max:255'
             ]);
             
+            if(trim($validated['category_name']) != '')
+            {
+                $validated['category']['name'] = $validated['category_name'];
+                
+                unset($validated['category_name']);
+            }
+            
+            if(is_array($validated['tag_names']) && !empty($validated['tag_names']))
+            {
+                foreach($validated['tag_names']) as $key => $tag)
+                {
+                    $validated['tags'][]['name'] = $tag;
+                }
+                
+                unset($validated['tag_names']);
+            }
+            
             $response = Http::withHeaders([
                 'Accept' => 'application/json',
                 'api_key' => env('API_KEY')
@@ -134,6 +151,23 @@ class PetsController extends Controller
                 'tag_names.*' => 'required|string|max:255',
                 'status' => 'required|string|max:255'
             ]);
+            
+            if(trim($validated['category_name']) != '')
+            {
+                $validated['category']['name'] = $validated['category_name'];
+                
+                unset($validated['category_name']);
+            }
+            
+            if(is_array($validated['tag_names']) && !empty($validated['tag_names']))
+            {
+                foreach($validated['tag_names']) as $key => $tag)
+                {
+                    $validated['tags'][]['name'] = $tag;
+                }
+                
+                unset($validated['tag_names']);
+            }
             
             $response = Http::withHeaders([
                 'Accept' => 'application/json',

@@ -1,10 +1,9 @@
 $(document).ready(function() {
     $('#add-tag-button').click(function() {
-		var tags_length = $('#list-tags input[type="text"]').length/2;
+		var tags_length = $('#list-tags input[type="text"]').length;
 		
 		tags_length++;
-		$(this).before('<div class="row"><div class="col-10"><strong>Id tagu ' + tags_length.toString() + 
-			':</strong><input type="text" name="tag_ids[]" class="form-control mb-3" value=""/>' + 
+		$(this).before('<div class="row"><div class="col-10">' + 
 			'<strong>Nazwa tagu ' + tags_length.toString() + 
 			':</strong><input type="text" name="tag_names[]" class="form-control mb-3" value=""/></div>' + 
 			'<div class="col-2 d-flex align-items-end pb-3">' + 
@@ -44,8 +43,7 @@ function del_tag_button_event_click()
 	$('.del-tag-button').click(function() {
 		$(this).closest('.row').remove();
 		$('#list-tags .row').each(function(index, elem) {
-			$(elem).find('div').eq(0).find('strong').eq(0).text('Id tagu ' + (index + 1) + ':');
-			$(elem).find('div').eq(0).find('strong').eq(1).text('Nazwa tagu ' + (index + 1)  + ':');
+			$(elem).find('div').eq(0).find('strong').eq(0).text('Nazwa tagu ' + (index + 1)  + ':');
 		});
 	});
 }

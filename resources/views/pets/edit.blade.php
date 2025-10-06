@@ -47,14 +47,12 @@
         <div class="form-group">
             <strong class="d-block mb-3">Tagi:</strong>
             <div id="list-tags">
-            	@if(is_array($data['tags']) && !empty($data['tags']))
-                	@foreach($data['tags'] as $key => $tag)
+            	@if(is_array(old('tag_names', $data['tags'])) && !empty(old('tag_names', $data['tags'])))
+                	@foreach(old('tag_names', $data['tags'])) as $key => $tag)
                 	<div class="row">
                 		<div class="col-10">
-                    		<strong>Id tagu {{ $key+1 }}:</strong>
-                    		<input type="text" class="form-control mb-3" name="tag_ids[]" value="{{ $tag['id'] }}" />
                     		<strong>Nazwa tagu {{ $key+1 }}:</strong>
-                    		<input type="text" class="form-control mb-3" name="tag_names[]" value="{{ $tag['name'] }}" />
+                    		<input type="text" class="form-control mb-3" name="tag_names[]" value="{{ $tag['name'] ?? $tag }}" />
                 		</div>
                 		<div class="col-2 d-flex align-items-end pb-3">
                 			<input type="button" class="del-tag-button" value="Usuń tag"/>
