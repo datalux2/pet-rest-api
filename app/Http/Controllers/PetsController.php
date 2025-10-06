@@ -52,7 +52,7 @@ class PetsController extends Controller
         {
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
-                'category_name' => 'string|max:255',
+                'category_name' => 'nullable|string|max:255',
                 'tag_names' => 'sometimes|required|array',
                 'tag_names.*' => 'required|string|max:255',
                 'status' => 'required|string|max:255'
@@ -67,7 +67,7 @@ class PetsController extends Controller
             
             if(is_array($validated['tag_names']) && !empty($validated['tag_names']))
             {
-                foreach($validated['tag_names']) as $key => $tag)
+                foreach($validated['tag_names'] as $key => $tag)
                 {
                     $validated['tags'][]['name'] = $tag;
                 }
@@ -146,7 +146,7 @@ class PetsController extends Controller
         {
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
-                'category_name' => 'string|max:255',
+                'category_name' => 'nullable|string|max:255',
                 'tag_names' => 'sometimes|required|array',
                 'tag_names.*' => 'required|string|max:255',
                 'status' => 'required|string|max:255'
@@ -161,7 +161,7 @@ class PetsController extends Controller
             
             if(is_array($validated['tag_names']) && !empty($validated['tag_names']))
             {
-                foreach($validated['tag_names']) as $key => $tag)
+                foreach($validated['tag_names'] as $key => $tag)
                 {
                     $validated['tags'][]['name'] = $tag;
                 }
