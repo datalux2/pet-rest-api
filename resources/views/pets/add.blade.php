@@ -37,7 +37,7 @@
         <div class="form-group">
             <strong class="d-block mb-3">Tagi:</strong>
             <div id="list-tags">
-            	@if(is_array(old('tag_names')) && !empty(old('tag_names')))
+            	@if(old('tag_names') !== null && is_array(old('tag_names')) && !empty(old('tag_names')))
                 	@foreach(old('tag_names') as $key => $tag)
                 	<div class="row">
                 		<div class="col-10">
@@ -57,7 +57,7 @@
     <div class="col-xs-12 col-sm-12 col-md-12 mb-3">
         <div class="form-group">
             <strong>Status:</strong>
-            <input type="text" name="status" class="form-control" value="{{ old('name') }}">
+            <input type="text" name="status" class="form-control" value="{{ old('status') }}">
         </div>
     </div>
     <div class="col-xs-12 col-sm-12 col-md-12 text-center">

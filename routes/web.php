@@ -13,7 +13,6 @@ Route::get('/list', [PetsController::class, 'index'])->name('list');
 Route::get('/list-by-status/{status}', [PetsController::class, 'list_by_status'])->name('list-by-status');
 
 Route::get('/add', [PetsController::class, 'add'])->name('add');
-Route::post('/add', [PetsController::class, 'add']);
 
 Route::get('/edit/{id}', [PetsController::class, 'edit'])->name('edit');
 

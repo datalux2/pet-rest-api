@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Http\RedirectResponse;
 
 /**
  * 
@@ -46,10 +47,10 @@ class PetsController extends Controller
      * @param Request $request
      * @return View
      */
-    public function pet_add_api(Request $request): View
-    {
+    public function pet_add_api(Request $request): RedirectResponse
+    {    
         if ($request->isMethod('post'))
-        {
+        {           
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
                 'category_name' => 'nullable|string|max:255',
@@ -65,7 +66,7 @@ class PetsController extends Controller
                 unset($validated['category_name']);
             }
             
-            if(is_array($validated['tag_names']) && !empty($validated['tag_names']))
+            if(isset($validated['tag_names']) && is_array($validated['tag_names']) && !empty($validated['tag_names']))
             {
                 foreach($validated['tag_names'] as $key => $tag)
                 {
@@ -140,7 +141,7 @@ class PetsController extends Controller
      * @param Request $request
      * @return View
      */
-    public function pet_edit_api(Request $request): View
+    public function pet_edit_api(Request $request): RedirectResponse
     {
         if ($request->isMethod('post'))
         {
@@ -159,7 +160,7 @@ class PetsController extends Controller
                 unset($validated['category_name']);
             }
             
-            if(is_array($validated['tag_names']) && !empty($validated['tag_names']))
+            if(isset($validated['tag_names']) && is_array($validated['tag_names']) && !empty($validated['tag_names']))
             {
                 foreach($validated['tag_names'] as $key => $tag)
                 {
@@ -181,9 +182,9 @@ class PetsController extends Controller
                 $dataResponse = $response->json();
                 
                 return redirect()->route('list-by-status', [
-                    'status' => $data['status']   
-                ])->with('success', 'Element PET o id ' . $data['id'] . ' został ' . 
-                    'zaktualizowany na liscie w REST API');
+                    'status' => $validated['status']   
+                ])->with('success', 'Element PET o id ' . $dataResponse['id'] . ' został ' . 
+                    'zaktualizowany na liście w REST API');
             }
             else
             {
