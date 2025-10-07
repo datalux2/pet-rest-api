@@ -50,7 +50,7 @@ class PetsController extends Controller
      */
     public function pet_add_api(Request $request): RedirectResponse
     {    
-        return $this->rest_api_action(Rest_Api_Action_Type::Add);
+        return $this->rest_api_action(Rest_Api_Action_Type::Add, $request);
     }
     
     /**
@@ -85,7 +85,7 @@ class PetsController extends Controller
      */
     public function pet_edit_api(Request $request): RedirectResponse
     {
-        return $this->rest_api_action(Rest_Api_Action_Type::Edit);
+        return $this->rest_api_action(Rest_Api_Action_Type::Edit, $request);
     }
     
     /**
@@ -96,7 +96,7 @@ class PetsController extends Controller
      */
     public function pet_delete_api(Request $request)
     {
-        $this->rest_api_action(Rest_Api_Action_Type::Delete);
+        $this->rest_api_action(Rest_Api_Action_Type::Delete, $request);
     }
     
     /**
@@ -105,20 +105,28 @@ class PetsController extends Controller
      * parameter
      * 
      * @param Rest_Api_Action_Type $type
+     * @param Request $request
      */
-    private function rest_api_action(Rest_Api_Action_Type $type)
+    private function rest_api_action(Rest_Api_Action_Type $type, Request $request)
     {
         if ($request->isMethod('post'))
         {
             if($type == Rest_Api_Action_Type::Add || $type == Rest_Api_Action_Type::Edit)
             {
-                $validated = $request->validate([
+                $paramaters = [
                     'name' => 'required|string|max:255',
                     'category_name' => 'nullable|string|max:255',
                     'tag_names' => 'sometimes|required|array',
                     'tag_names.*' => 'required|string|max:255',
                     'status' => 'required|string|max:255'
-                ]);
+                ];
+                
+                if ($type == Rest_Api_Action_Type::Edit)
+                {
+                    $paramaters['id'] = 'required|integer|min:0';    
+                }
+                
+                $validated = $request->validate($paramaters);
                 
                 $validated['name'] = trim($validated['name']);
                 $validated['category_name'] = trim($validated['category_name']);
