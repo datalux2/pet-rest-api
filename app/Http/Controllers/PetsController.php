@@ -146,6 +146,7 @@ class PetsController extends Controller
         if ($request->isMethod('post'))
         {
             $validated = $request->validate([
+                'id' => 'required|integer|gt:-1',
                 'name' => 'required|string|max:255',
                 'category_name' => 'nullable|string|max:255',
                 'tag_names' => 'sometimes|required|array',

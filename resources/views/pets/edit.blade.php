@@ -27,7 +27,8 @@
     <div class="col-xs-12 col-sm-12 col-md-12 mb-3">
         <div class="form-group">
             <strong>ID elementu:</strong>
-            {{ $data['id'] ?? '' }}
+            {{ $data['id'] }}
+            <input type="hidden" name="id" value="{{ $data['id'] }}" />
         </div>
     </div>
     <div class="col-xs-12 col-sm-12 col-md-12 mb-3">
