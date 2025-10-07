@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Http\RedirectResponse;
+use App\Enums\Rest_Api_Action_Type;
 
 /**
  * 
@@ -49,66 +50,7 @@ class PetsController extends Controller
      */
     public function pet_add_api(Request $request): RedirectResponse
     {    
-        if ($request->isMethod('post'))
-        {           
-            $validated = $request->validate([
-                'name' => 'required|string|max:255',
-                'category_name' => 'nullable|string|max:255',
-                'tag_names' => 'sometimes|required|array',
-                'tag_names.*' => 'required|string|max:255',
-                'status' => 'required|string|max:255'
-            ]);
-            
-            if(trim($validated['category_name']) != '')
-            {
-                $validated['category']['name'] = $validated['category_name'];
-                
-                unset($validated['category_name']);
-            }
-            
-            if(isset($validated['tag_names']) && is_array($validated['tag_names']) && !empty($validated['tag_names']))
-            {
-                foreach($validated['tag_names'] as $key => $tag)
-                {
-                    $validated['tags'][]['name'] = $tag;
-                }
-                
-                unset($validated['tag_names']);
-            }
-            
-            $response = Http::withHeaders([
-                'Accept' => 'application/json',
-                'api_key' => env('API_KEY')
-            ])->post(env('PET_REST_API_URL'), $validated);
-            
-            $httpCode = $response->status();
-            
-            if ($httpCode == 200)
-            {
-                $dataResponse = $response->json();
-                
-                return redirect()->route('list-by-status', [
-                    'status' => $validated['status']
-                ])->with('success', 'Element PET o id ' . $dataResponse['id'] . ' został ' .
-                    'dodany do listy w REST API');
-            }
-            else
-            {
-                switch($httpCode)
-                {
-                    case 405:
-                        $message = 'Nieprawidłowe dane wejściowe';
-                        break;
-                        
-                    default:
-                        $message = 'Nieokreślony błąd';
-                        break;
-                }
-                
-                return redirect()->back()->with('error', 'Wystąpił błąd przesyłania danych. ' . 
-                    '<br/><br/>Kod błędu HTTP: ' . $httpCode . '<br/><br/>' . $message);
-            }
-        }
+        return $this->rest_api_action(Rest_Api_Action_Type::Add);
     }
     
     /**
@@ -143,38 +85,93 @@ class PetsController extends Controller
      */
     public function pet_edit_api(Request $request): RedirectResponse
     {
+        return $this->rest_api_action(Rest_Api_Action_Type::Edit);
+    }
+    
+    /**
+     * Deleting pet in REST API PET list
+     * 
+     * @param Request $request
+     * @return void
+     */
+    public function pet_delete_api(Request $request)
+    {
+        $this->rest_api_action(Rest_Api_Action_Type::Delete);
+    }
+    
+    /**
+     * Executes REST API action like add, edit
+     * or delete element depending on type
+     * parameter
+     * 
+     * @param Rest_Api_Action_Type $type
+     */
+    private function rest_api_action(Rest_Api_Action_Type $type)
+    {
         if ($request->isMethod('post'))
         {
-            $validated = $request->validate([
-                'id' => 'required|integer|gt:-1',
-                'name' => 'required|string|max:255',
-                'category_name' => 'nullable|string|max:255',
-                'tag_names' => 'sometimes|required|array',
-                'tag_names.*' => 'required|string|max:255',
-                'status' => 'required|string|max:255'
-            ]);
-            
-            if(trim($validated['category_name']) != '')
+            if($type == Rest_Api_Action_Type::Add || $type == Rest_Api_Action_Type::Edit)
             {
-                $validated['category']['name'] = $validated['category_name'];
+                $validated = $request->validate([
+                    'name' => 'required|string|max:255',
+                    'category_name' => 'nullable|string|max:255',
+                    'tag_names' => 'sometimes|required|array',
+                    'tag_names.*' => 'required|string|max:255',
+                    'status' => 'required|string|max:255'
+                ]);
                 
-                unset($validated['category_name']);
-            }
-            
-            if(isset($validated['tag_names']) && is_array($validated['tag_names']) && !empty($validated['tag_names']))
-            {
-                foreach($validated['tag_names'] as $key => $tag)
+                $validated['name'] = trim($validated['name']);
+                $validated['category_name'] = trim($validated['category_name']);
+                $validated['status'] = trim($validated['status']);
+                
+                if(trim($validated['category_name']) != '')
                 {
-                    $validated['tags'][]['name'] = $tag;
+                    $validated['category']['name'] = $validated['category_name'];
+                    
+                    unset($validated['category_name']);
                 }
                 
-                unset($validated['tag_names']);
+                if(isset($validated['tag_names']) && is_array($validated['tag_names']) && !empty($validated['tag_names']))
+                {
+                    foreach($validated['tag_names'] as $key => $tag)
+                    {
+                        $validated['tags'][]['name'] = trim($tag);
+                    }
+                    
+                    unset($validated['tag_names']);
+                }
+            }
+            else if($type == Rest_Api_Action_Type::Delete)
+            {
+                $id = $request->input('id');
             }
             
-            $response = Http::withHeaders([
-                'Accept' => 'application/json',
-                'api_key' => env('API_KEY')
-            ])->put(env('PET_REST_API_URL'), $validated);
+            switch($type)
+            {
+                case Rest_Api_Action_Type::Add:
+                    $response = Http::withHeaders([
+                    'Accept' => 'application/json',
+                    'api_key' => env('API_KEY')
+                    ])->post(env('PET_REST_API_URL'), $validated);
+                    
+                    break;
+                    
+                case Rest_Api_Action_Type::Edit:
+                    $response = Http::withHeaders([
+                    'Accept' => 'application/json',
+                    'api_key' => env('API_KEY')
+                    ])->put(env('PET_REST_API_URL'), $validated);
+                    
+                    break;
+                    
+                case Rest_Api_Action_Type::Delete:
+                    $response = Http::withHeaders([
+                    'Accept' => 'application/json',
+                    'api_key' => env('API_KEY')
+                    ])->delete(env('PET_REST_API_URL') . '/' . $id);
+                    
+                    break;
+            }
             
             $httpCode = $response->status();
             
@@ -182,10 +179,29 @@ class PetsController extends Controller
             {
                 $dataResponse = $response->json();
                 
-                return redirect()->route('list-by-status', [
-                    'status' => $validated['status']   
-                ])->with('success', 'Element PET o id ' . $dataResponse['id'] . ' został ' . 
-                    'zaktualizowany na liście w REST API');
+                switch($type)
+                {
+                    case Rest_Api_Action_Type::Add:
+                        return redirect()->route('list-by-status', [
+                        'status' => $validated['status']
+                        ])->with('success', 'Element PET o id ' . $dataResponse['id'] . ' został ' .
+                            'dodany do listy w REST API');
+                        
+                        break;
+                        
+                    case Rest_Api_Action_Type::Edit:
+                        return redirect()->route('list-by-status', [
+                        'status' => $validated['status']
+                        ])->with('success', 'Element PET o id ' . $dataResponse['id'] . ' został ' .
+                            'zaktualizowany na liście w REST API');
+                        
+                        break;
+                        
+                    case Rest_Api_Action_Type::Delete:
+                        session()->flash('success', 'Element PET o id ' . $id . ' został usunięty z zasobu REST API');
+                        
+                        break;
+                }
             }
             else
             {
@@ -194,13 +210,13 @@ class PetsController extends Controller
                     case 400:
                         $message = 'Nieprawidłowe pole ID';
                         break;
+                        
+                    case 404:
+                        $message = 'Nie znaleziono elementu PET dla zasobu REST API';
+                        break;
                     
-                    case 404:
-                        $message = 'Nie znaleziono elementu PET dla zasobu REST API';
-                        break;
-                        
                     case 405:
-                        $message = 'Wystąpił błąd walidacji';
+                        $message = 'Nieprawidłowe dane wejściowe';
                         break;
                         
                     default:
@@ -208,55 +224,16 @@ class PetsController extends Controller
                         break;
                 }
                 
-                return redirect()->back()->with('error', 'Wystąpił błąd przesyłania danych. ' .
-                    '<br/><br/>Kod błędu HTTP: ' . $httpCode . '<br/><br/>' . $message);
-            }
-        }
-    }
-    
-    /**
-     * Deleting pet in REST API PET list
-     * 
-     * @param Request $request
-     */
-    public function pet_delete_api(Request $request)
-    {
-        if ($request->isMethod('post'))
-        {
-            $id = $request->input('id');
-            
-            $response = Http::withHeaders([
-                'Accept' => 'application/json',
-                'api_key' => env('API_KEY')
-            ])->delete(env('PET_REST_API_URL') . '/' . $id);
-            
-            $httpCode = $response->status();
-            
-            if ($httpCode == 200)
-            {
-                $dataResponse = $response->json();
-                
-                session()->flash('success', 'Element PET o id ' . $id . ' został usunięty z zasobu REST API');
-            }
-            else 
-            {
-                switch($httpCode)
+                if ($type == Rest_Api_Action_Type::Add || 
+                        $type == Rest_Api_Action_Type::Edit)
                 {
-                    case 400:
-                        $message = 'Nieprawidłowe pole ID';
-                        break;
-                        
-                    case 404:
-                        $message = 'Nie znaleziono elementu PET dla zasobu REST API';
-                        break;
-                        
-                    default:
-                        $message = 'Nieokreślony błąd';
-                        break;
+                    return redirect()->back()->with('error', 'Wystąpił błąd przesyłania danych. ' .
+                        '<br/><br/>Kod błędu HTTP: ' . $httpCode . '<br/><br/>' . $message);
                 }
-                
-                session()->flash('error', 'Wystąpił błąd przesyłania danych. <br/><br/>Kod błędu HTTP: ' . 
-                    $httpCode . '<br/><br/>' . $message);
+                else if ($type == Rest_Api_Action_Type::Delete)
+                {
+                    session()->flash('success', 'Element PET o id ' . $id . ' został usunięty z zasobu REST API');
+                }
             }
         }
     }

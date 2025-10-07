@@ -36,6 +36,21 @@ $(document).ready(function() {
 			});
 		}
 	});
+	
+	$('#show-list-by-status').on('click', function() {
+        const status = $('#status').val().trim();
+
+        if (status !== '')
+		{
+            // Zakoduj status do URI
+            const encodedStatus = encodeURIComponent(status);
+            window.location.href = '/list-by-status/' + encodedStatus;
+        }
+		else
+		{
+            alert('Wpisz status.');
+        }
+    });
 });
 
 function del_tag_button_event_click()
