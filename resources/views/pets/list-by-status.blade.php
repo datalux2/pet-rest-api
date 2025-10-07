@@ -16,7 +16,7 @@
 @endif
 
 @if($data)
-<table class="table table-bordered">
+	<table class="table table-bordered">
 		<thead>
 			<tr>
 				<td>Id</td>
@@ -28,19 +28,25 @@
 			</tr>
 		</thead>
 		<tbody>
-			@foreach($data as $pet)
-			<tr>
-				<td>{{ $pet['id'] }}</td>
-				<td>{{ $pet['category']['id'] ?? '-' }}</td>
-				<td>{{ $pet['category']['name'] ?? '-' }}</td>
-				<td>{{ $pet['name'] ?? '-' }}</td>
-				<td>{{ $pet['status'] ?? '-' }}</td>
-				<td>
-					<a href="{{ route('edit', $pet['id']) }}" class="d-block mb-2">Edytuj</a>
-					<a href="javascript: void(0);" class="del-pet-link d-block mb-2" id="{{ $pet['id'] }}">Usuń</a>
-				</td>
-			</tr>
-			@endforeach
+			@if(!$data->isEmpty())
+    			@foreach($data as $pet)
+    			<tr>
+    				<td>{{ $pet['id'] }}</td>
+    				<td>{{ $pet['category']['id'] ?? '-' }}</td>
+    				<td>{{ $pet['category']['name'] ?? '-' }}</td>
+    				<td>{{ $pet['name'] ?? '-' }}</td>
+    				<td>{{ $pet['status'] ?? '-' }}</td>
+    				<td>
+    					<a href="{{ route('edit', $pet['id']) }}" class="d-block mb-2">Edytuj</a>
+    					<a href="javascript: void(0);" class="del-pet-link d-block mb-2" id="{{ $pet['id'] }}">Usuń</a>
+    				</td>
+    			</tr>
+    			@endforeach
+			@else
+    			<tr>
+    				<td colspan="6">Brak danych</td>
+    			</tr>
+			@endif
 		</tbody>
 	</table>
 	
